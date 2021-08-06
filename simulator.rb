@@ -9,19 +9,30 @@ class Simulator
   end
 
   def run
+count=1
     loop do
+#     50.times do
       run_once
-      duration = rand * 2
+      if count<10
+        duration = rand * 2
+      else
+        duration=600
+      end
+#      duration = rand(0.001..0.003)
       $stdout.puts "Sleeping for #{duration}"
       sleep(duration)
+      count+=1
     end
   end
 
   def run_once
     http = Net::HTTP.new("localhost", port)
     request = Net::HTTP::Post.new("/rides")
+    distance = "#%02x%02x%02x" % [rand(MIN_COLOR..MAX_COLOR),rand(MIN_COLOR..MAX_COLOR) ,rand(MIN_COLOR..MAX_COLOR) ]
+    distance.upcase!
     request.set_form_data({
-      "distance" => rand * (MAX_DISTANCE - MIN_DISTANCE) + MIN_DISTANCE
+      #"color" => rand * (MAX_COLOR - MIN_COLOR) + MIN_COLOR
+      "distance" => distance
     })
 
     response = http.request(request)
@@ -32,10 +43,10 @@ class Simulator
   # private
   #
 
-  MAX_DISTANCE = 1000.0
-  private_constant :MAX_DISTANCE
-  MIN_DISTANCE = 5.0
-  private_constant :MIN_DISTANCE
+  MAX_COLOR = 255
+  private_constant :MAX_COLOR
+  MIN_COLOR = 1
+  private_constant :MIN_COLOR
 
   attr_accessor :port
 end

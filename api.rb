@@ -25,7 +25,7 @@ class API < Sinatra::Base
       )
 
       [201, JSON.generate(wrap_ok(
-        Messages.ok(distance: params["distance"].round(1))
+        Messages.ok(distance: params["distance"])
       ))]
     end
   end
@@ -39,7 +39,7 @@ ACTION_CREATE = "create"
 ACTION_UPDATE = "update"
 ACTION_DELETE = "delete"
 
-OBJECT_RIDE = "ride"
+OBJECT_RIDE = "habicat"
 
 #
 # models
@@ -62,8 +62,8 @@ end
 #
 
 module Messages
-  def self.error_require_float(key:)
-    "Parameter '#{key}' must be a floating-point number."
+  def self.error_require_text(key:)
+    "Parameter '#{key}' must be text."
   end
 
   def self.error_require_param(key:)
@@ -71,7 +71,7 @@ module Messages
   end
 
   def self.ok(distance:)
-    "Payment accepted. Your pilot is on their way! distance=#{distance}m"
+    "Color accepted. Your habicat will be=#{distance}"
   end
 end
 
@@ -81,18 +81,18 @@ end
 
 def validate_params(request)
   {
-    "distance" => validate_params_float(request, "distance"),
+    "color" => validate_params_text(request, "color"),
   }
 end
 
-def validate_params_float(request, key)
+def validate_params_text(request, key)
   val = validate_params_present(request, key)
 
   # Float as opposed to to_f because it's more strict about what it'll take.
   begin
-    Float(val)
+    Text(val)
   rescue ArgumentError
-    halt 422, JSON.generate(wrap_error(Messages.error_require_float(key: key)))
+    halt 422, JSON.generate(wrap_error(Messages.error_require_text(key: key)))
   end
 end
 

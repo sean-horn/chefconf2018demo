@@ -5,7 +5,7 @@ class Streamer
   def run
     loop do
       # simulate double-send some amount of the time
-      num_streamed = run_once(send_twice: rand() < 0.10)
+      num_streamed = run_once(send_twice: rand() < 0.20)
 
       # Sleep for a while if we didn't find anything to stream on the last
       # run.
@@ -45,7 +45,7 @@ class Streamer
               num_streamed += 1
             end
 
-            $stdout.puts "Enqueued record: #{record.action} #{record.object}"
+            $stdout.puts "Enqueued record: #{record.action} #{record.object} #{record.id}"
           end
         end
 
@@ -61,12 +61,12 @@ class Streamer
   #
 
   # Number of records to try to stream on each batch.
-  BATCH_SIZE = 1000
+  BATCH_SIZE = 5
   private_constant :BATCH_SIZE
 
   # Sleep duration in seconds to sleep in case we ran but didn't find anything
   # to stream.
-  SLEEP_DURATION = 5
+  SLEEP_DURATION = 2
   private_constant :SLEEP_DURATION
 
   private def stream(data)
